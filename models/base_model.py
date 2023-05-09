@@ -16,7 +16,7 @@ class BaseModel():
         attributes/methods for other classes
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
             magic initialization method
 
@@ -28,6 +28,26 @@ class BaseModel():
             self.updated_at => current datetime when an instance is created \
             + and it will be updated every time you change your object
         """
+
+        # check is kwargs is not empty and create an instance \
+        # with attributes and values from the kwargs dictionary passed in
+
+        if kwargs:
+            key_list = list(kwargs)
+
+            for val in key_list:
+                if val == "__class__":
+                    continue
+
+                if (val == "created_at") or (val == "updated_at"):
+                    # assign datetime.strptime to x <to limit line chars -PEP8>
+                    x = datetime.strptime
+
+                    self.__dict__[val] = x(kwargs[val], "%Y-%m-%d %H:%M:%S.%f")
+                else:
+                    self.__dict__[val] = kwargs[val]
+
+            return
 
         self.id = str(uuid.uuid4())
 
@@ -62,5 +82,8 @@ class BaseModel():
 
         dict_vals = self.__dict__
         dict_vals["__class__"] = self.__class__.__name__
+
+        dict_vals["created_at"] = str(dict_vals["created_at"])
+        dict_vals["updated_at"] = str(dict_vals["updated_at"])
 
         return dict_vals
