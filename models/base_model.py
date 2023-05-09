@@ -24,6 +24,7 @@ class BaseModel():
             + the base model class
 
             self.created_at => current datetime when an instance is created
+
             self.updated_at => current datetime when an instance is created \
             + and it will be updated every time you change your object
         """
