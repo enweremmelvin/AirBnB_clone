@@ -7,6 +7,7 @@
 """
 
 import uuid
+from models import storage
 from datetime import datetime
 
 
@@ -39,29 +40,31 @@ class BaseModel():
                 if val == "__class__":
                     continue
 
-                if (val == "created_at") or (val == "updated_at"):
-                    # assign datetime.strptime to x <to limit line chars -PEP8>
-                    x = datetime.strptime
-
-                    self.__dict__[val] = x(kwargs[val], "%Y-%m-%d %H:%M:%S.%f")
-                else:
-                    self.__dict__[val] = kwargs[val]
+                self.__dict__[val] = kwargs[val]
 
             return
 
         self.id = str(uuid.uuid4())
 
-        # convert datetime from iso format
-        iso_format = datetime.fromisoformat
+        # initialize created_at and updated_at public instance variables
+        self.created_at = datetime.now().isoformat()
+        self.updated_at = datetime.now().isoformat()
 
-        self.created_at = iso_format(datetime.now().isoformat())
-        self.updated_at = iso_format(datetime.now().isoformat())
+        # if its a new instance that is being initialized (not from kwargs) \
+        # add a call to the method new(self) on storage
+        storage.new(self)
 
     def __str__(self):
         """
             return string representation in format: \
             [<class name>] (<self.id>) <self.__dict__>
         """
+
+        if (type(self.created_at) is str) and (type(self.updated_at) is str):
+            x = datetime.strptime
+
+            self.created_at = x(str(self.created_at), "%Y-%m-%dT%H:%M:%S.%f")
+            self.updated_at = x(str(self.updated_at), "%Y-%m-%dT%H:%M:%S.%f")
 
         value = f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
         return value
@@ -72,6 +75,7 @@ class BaseModel():
             updated_at with the current datetime
         """
 
+        storage.save()
         self.updated_at = datetime.now().isoformat()
 
     def to_dict(self):
@@ -83,7 +87,12 @@ class BaseModel():
         dict_vals = self.__dict__
         dict_vals["__class__"] = self.__class__.__name__
 
-        dict_vals["created_at"] = str(dict_vals["created_at"])
-        dict_vals["updated_at"] = str(dict_vals["updated_at"])
+        # convert datetime (created_at and updated_at) public instance fields \
+        # to datetime iso format
+        to_iso = datetime.isoformat
+
+        if type(dict_vals["created_at"]) is not str:
+            dict_vals["created_at"] = to_iso(dict_vals["created_at"])
+            dict_vals["updated_at"] = to_iso(dict_vals["updated_at"])
 
         return dict_vals
