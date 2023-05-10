@@ -62,6 +62,10 @@ class FileStorage():
             exist, no exception should be raised)
         """
 
+        # import BaseModel from models.base_model module \
+        # this import is placed here to prevent circular import errors
+        from models.base_model import BaseModel
+
         # check if file <self.__file_path> exists
         check_file = os.path.exists(self.__file_path)
 
@@ -73,7 +77,6 @@ class FileStorage():
             json_obj = json.loads(json_obj)
 
             # import BaseModel and instantiate new instances with values \
-            # from json file -> not implemented yet because of circular \
-            # import issues
+            # from json file
             for key, val in json_obj.items():
-                self.__objects[key] = val["__class__"](**val)
+                self.__objects[key] = BaseModel(**val)
