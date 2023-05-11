@@ -228,6 +228,7 @@ class HBNBCommand(cmd.Cmd):
                             new_str = args[i]
                         else:
                             new_str += " " + args[i]
+                            new_str = new_str.strip()
 
                             if args[i][-1] == "\"":
                                 break
@@ -253,7 +254,7 @@ class HBNBCommand(cmd.Cmd):
                     if value[-1] == i:
                         value = value[:-1]
 
-                # convert string to int or float (it it is convertible)
+                # convert string to int or float (if it is convertible)
                 if '.' in value:
                     try:
                         value = float(value)
