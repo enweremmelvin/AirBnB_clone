@@ -62,8 +62,9 @@ class FileStorage():
             exist, no exception should be raised)
         """
 
-        # import BaseModel from models.base_model module \
+        # import needed classes from their modules in the models package \
         # this import is placed here to prevent circular import errors
+        from models.user import User
         from models.base_model import BaseModel
 
         # check if file <self.__file_path> exists
@@ -72,6 +73,10 @@ class FileStorage():
         if not check_file:
             return
 
+        # dictionary of classes -> key = class name -> value = \
+        # memory representation of class
+        class_dict = {"BaseModel": BaseModel, "User": User}
+
         with open(self.__file_path, mode="r", encoding="utf-8") as file_handle:
             json_obj = file_handle.read()
             json_obj = json.loads(json_obj)
@@ -79,4 +84,14 @@ class FileStorage():
             # import BaseModel and instantiate new instances with values \
             # from json file
             for key, val in json_obj.items():
-                self.__objects[key] = BaseModel(**val)
+                # find name of class to initialize an instance of \
+                # and store key/value pairs in __objects dictionary
+                class_name = None
+
+                for cls_key, value in class_dict.items():
+                    if key.startswith(cls_key):
+                        class_name = value
+                        break
+
+                if class_name != None:
+                    self.__objects[key] = class_name(**val)

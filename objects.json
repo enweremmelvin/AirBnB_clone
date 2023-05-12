@@ -1,1 +1,1 @@
-{"BaseModel.762644c0-9eed-49ed-8b5c-0b5d8115979a": {"id": "762644c0-9eed-49ed-8b5c-0b5d8115979a", "created_at": "2023-05-11T12:16:48.180519", "updated_at": "2023-05-11T12:16:48.180564", "country": "Nigeria", "news": "Corps", "course": "ENG", "__class__": "BaseModel"}}
+{"User.463807af-99db-4cd9-bb1b-07c620f1fec0": {"id": "463807af-99db-4cd9-bb1b-07c620f1fec0", "created_at": "2023-05-12T14:42:16.783967", "updated_at": "2023-05-12T14:42:16.784016", "big": "small", "__class__": "User"}}

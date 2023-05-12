@@ -8,6 +8,7 @@
 
 import cmd
 from models import storage
+from models.user import User
 from models.base_model import BaseModel
 
 
@@ -17,6 +18,10 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
+
+    # create dictionary of legal classes where; \
+    # key -> class name && value -> memory representation of class
+    __class_dict = {"BaseModel": BaseModel, "User": User}
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -50,15 +55,27 @@ class HBNBCommand(cmd.Cmd):
         if " " in arg:
             arg = arg.split()[0]
 
-        if arg != "BaseModel":
+        if arg not in list(self.__class_dict):
             print("** class doesn't exist **")
             return
 
         # create new instance and save to JSON file
-        new_instance = BaseModel()
-        storage.save()
+        class_name = None
 
-        print(new_instance.id)
+        # search for class to create an instance of
+        # class -> value of key that matches arg
+        for key, value in self.__class_dict.items():
+            if arg == key:
+                class_name = value
+                break
+
+        # create object of class found if class_name \
+        # is not None
+        if class_name != None:
+            new_instance = class_name()
+            storage.save()
+
+            print(new_instance.id)
 
     def do_show(self, arg):
         """
@@ -83,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = arg.split()
 
-            if args[0] != "BaseModel":
+            if args[0] not in list(self.__class_dict):
                 print("** class doesn't exist **")
             elif len(args) == 1:
                 print("** instance id missing **")
@@ -120,7 +137,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = arg.split()
 
-            if args[0] != "BaseModel":
+            if args[0] not in list(self.__class_dict):
                 print("** class doesn't exist **")
             elif len(args) == 1:
                 print("** instance id missing **")
@@ -157,11 +174,11 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = arg.split()
 
-            if args[0] != "BaseModel":
+            if args[0] not in list(self.__class_dict):
                 print("** class doesn't exist **")
             else:
                 for key, value in obj_dict.items():
-                    if key.startswith("BaseModel"):
+                    if key.startswith(args[0]):
                         obj_list.append(str(value))
 
                 print(obj_list)
@@ -200,7 +217,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = arg.split()
 
-            if args[0] != "BaseModel":
+            if args[0] not in list(self.__class_dict):
                 print("** class doesn't exist **")
             elif len(args) == 1:
                 print("** instance id missing **")
