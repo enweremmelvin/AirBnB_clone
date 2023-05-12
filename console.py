@@ -305,7 +305,7 @@ class HBNBCommand(cmd.Cmd):
         # create a dictionary of recognised custom commands
         # key -> expected command; value -> memory representation of \
         # method to handle the given command
-        arg_dict = {"all()": self.do_all}
+        arg_dict = {"all()": self.do_all, "count()": self.do_count}
 
         # split commands entered; split by whitespace " "
         args = arg.split()
@@ -331,6 +331,27 @@ class HBNBCommand(cmd.Cmd):
         # print default error message if command entered is \
         # not recognised
         print("*** Unknown Syntax: {}".format(arg))
+
+    def do_count(self, arg):
+        """
+            count the number of instances of a class
+            return 0 if no instance found; otherwise \
+            return number of instances found
+        """
+
+        if not arg:
+            print("** class name missing **")
+            return
+
+        counter = 0
+        obj_dict = storage.all()
+        class_name = arg.split()[0]
+
+        for key, value in obj_dict.items():
+            if key.startswith(class_name):
+                counter += 1
+
+        print(counter)
 
 
 if __name__ == "__main__":
