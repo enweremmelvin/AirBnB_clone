@@ -295,6 +295,43 @@ class HBNBCommand(cmd.Cmd):
                 obj.__dict__[attr] = value
                 storage.save()
 
+    def default(self, arg):
+        """
+            override default method of cmd.Cmd class to make \
+            provisions for customs dynamic commands; eg: <class_name>.all() \
+            where <class_name> is variable
+        """
+
+        # create a dictionary of recognised custom commands
+        # key -> expected command; value -> memory representation of \
+        # method to handle the given command
+        arg_dict = {"all()": self.do_all}
+
+        # split commands entered; split by whitespace " "
+        args = arg.split()
+
+        # search for entered command in keys of dictionary
+        for key, val in arg_dict.items():
+            if args[0].endswith(key):
+                class_name = ""
+
+                if "." not in args[0]:
+                    break
+
+                for i in args[0]:
+                    if i == ".":
+                        break
+
+                    class_name += i
+
+                if len(class_name) > 0:
+                    val(class_name)
+                    return
+
+        # print default error message if command entered is \
+        # not recognised
+        print("*** Unknown Syntax: {}".format(arg))
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
