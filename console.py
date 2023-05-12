@@ -9,6 +9,11 @@
 import cmd
 from models import storage
 from models.user import User
+from models.city import City
+from models.place import Place
+from models.state import State
+from models.review import Review
+from models.amenity import Amenity
 from models.base_model import BaseModel
 
 
@@ -21,7 +26,9 @@ class HBNBCommand(cmd.Cmd):
 
     # create dictionary of legal classes where; \
     # key -> class name && value -> memory representation of class
-    __class_dict = {"BaseModel": BaseModel, "User": User}
+    __class_dict = {"BaseModel": BaseModel, "User": User, "Place": Place,
+                    "State": State, "City": City, "Amenity": Amenity,
+                    "Review": Review}
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -71,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
 
         # create object of class found if class_name \
         # is not None
-        if class_name != None:
+        if class_name:
             new_instance = class_name()
             storage.save()
 
@@ -108,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
                 obj_dict = storage.all()
                 obj_key = args[0] + "." + args[1]
 
-                if not obj_key in list(obj_dict):
+                if obj_key not in list(obj_dict):
                     print("** no instance found **")
                 else:
                     obj = obj_dict[obj_key]
@@ -149,7 +156,7 @@ class HBNBCommand(cmd.Cmd):
                     print("** no instance found **")
                 else:
                     # delete object and save changes to JSON file
-                    del(obj_dict[obj_key])
+                    del (obj_dict[obj_key])
                     storage.save()
 
     def do_all(self, arg):
@@ -168,7 +175,7 @@ class HBNBCommand(cmd.Cmd):
 
         if not arg:
             for key, value in obj_dict.items():
-               obj_list.append(str(value))
+                obj_list.append(str(value))
 
             print(obj_list)
         else:
@@ -189,7 +196,8 @@ class HBNBCommand(cmd.Cmd):
             or updating attribute (save the change into the JSON file). \
             Ex: $ update BaseModel 1234-1234-1234 email "aibnb@mail.com"
 
-            Usage: update <class name> <id> <attribute name> "<attribute value>"
+            Usage: \
+            update <class name> <id> <attribute name> "<attribute value>"
 
             If the class name is missing: \
             print ** class name missing ** (ex: $ update)

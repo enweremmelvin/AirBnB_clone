@@ -65,6 +65,11 @@ class FileStorage():
         # import needed classes from their modules in the models package \
         # this import is placed here to prevent circular import errors
         from models.user import User
+        from models.city import City
+        from models.place import Place
+        from models.state import State
+        from models.review import Review
+        from models.amenity import Amenity
         from models.base_model import BaseModel
 
         # check if file <self.__file_path> exists
@@ -75,7 +80,9 @@ class FileStorage():
 
         # dictionary of classes -> key = class name -> value = \
         # memory representation of class
-        class_dict = {"BaseModel": BaseModel, "User": User}
+        class_dict = {"BaseModel": BaseModel, "User": User, "Place": Place,
+                      "State": State, "City": City, "Amenity": Amenity,
+                      "Review": Review}
 
         with open(self.__file_path, mode="r", encoding="utf-8") as file_handle:
             json_obj = file_handle.read()
@@ -93,5 +100,5 @@ class FileStorage():
                         class_name = value
                         break
 
-                if class_name != None:
+                if class_name:
                     self.__objects[key] = class_name(**val)
