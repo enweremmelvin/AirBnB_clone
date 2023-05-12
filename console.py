@@ -311,7 +311,7 @@ class HBNBCommand(cmd.Cmd):
         # create dictionary of recognised custom commands \
         # unlike the dictionary above; these commands require an \
         # argument be passed to them
-        arg_param_dict = {"show": self.do_show}
+        arg_param_dict = {"show": self.do_show, "destroy": self.do_destroy}
 
         # split commands entered; split by whitespace " "
         args = arg.split()
