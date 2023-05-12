@@ -6,6 +6,7 @@
     it's base cmd.Cmd
 """
 
+import re
 import cmd
 from models import storage
 from models.user import User
@@ -307,8 +308,46 @@ class HBNBCommand(cmd.Cmd):
         # method to handle the given command
         arg_dict = {"all()": self.do_all, "count()": self.do_count}
 
+        # create dictionary of recognised custom commands \
+        # unlike the dictionary above; these commands require an \
+        # argument be passed to them
+        arg_param_dict = {"show": self.do_show}
+
         # split commands entered; split by whitespace " "
         args = arg.split()
+
+        # below code in try statement handles commands that require arguments \
+        # eg: User.show("<user id here>")
+        try:
+            # pull <class name; command; instance id> from the argument \
+            # passed using regular expressions
+            val_dict = {"cls_name": "", "cmd_name": "", "instc_id": ""}
+            param = re.search(r"(\w+)\.(\w+)\(\"?\'?(.*)\"?\'?\)", arg)
+            param = param.groups()
+            val_dict_list = list(val_dict)
+
+            # initialize empty strings in val_dict with matched groups \
+            # from param -> regex to pick <class> <command> <instance>
+            for i in range(len(val_dict_list)):
+                try:
+                    val_dict[val_dict_list[i]] = param[i]
+                except IndexError:
+                    pass
+
+            # check if command entered is in dictionary of "legal" \
+            # commands and call the method to handle it
+            if val_dict["cmd_name"] in list(arg_param_dict):
+                for key, val in arg_param_dict.items():
+                    if val_dict["cmd_name"] == key:
+                        # concatenate parameter to pass to method
+                        # <class> + " " + <instance id>
+                        param = val_dict["cls_name"] + \
+                            " " + val_dict["instc_id"].strip("\"\'")
+
+                        val(param)
+                        return
+        except (TypeError, IndexError, AttributeError):
+            pass
 
         # search for entered command in keys of dictionary
         for key, val in arg_dict.items():
