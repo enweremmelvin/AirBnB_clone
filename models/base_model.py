@@ -93,6 +93,7 @@ class BaseModel():
 
         if type(dict_vals["created_at"]) is not str:
             dict_vals["created_at"] = to_iso(dict_vals["created_at"])
+        if type(dict_vals["updated_at"]) is not str:
             dict_vals["updated_at"] = to_iso(dict_vals["updated_at"])
 
         return dict_vals
