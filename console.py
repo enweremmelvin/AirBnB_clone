@@ -311,7 +311,8 @@ class HBNBCommand(cmd.Cmd):
         # create dictionary of recognised custom commands \
         # unlike the dictionary above; these commands require an \
         # argument be passed to them
-        arg_param_dict = {"show": self.do_show, "destroy": self.do_destroy}
+        arg_param_dict = {"show": self.do_show, "destroy": self.do_destroy, \
+                          "update": self.do_update}
 
         # split commands entered; split by whitespace " "
         args = arg.split()
@@ -334,6 +335,34 @@ class HBNBCommand(cmd.Cmd):
                 except IndexError:
                     pass
 
+            # concatenate values passed in the parentheses to a string \
+            # to be used by the do_update method
+            if val_dict["cmd_name"] == "update":
+                new_arg = val_dict["instc_id"]
+                for i in ["\"", "'", ","]:
+                    new_arg = new_arg.replace(i, "")
+
+                attr_val = ""
+                new_arg = new_arg.split()
+
+                # concatenate multiple words passed as attribute \
+                # values for the class to be updated
+                for i in range(len(new_arg)):
+                    if i > 1:
+                        if i == 2:
+                            attr_val = new_arg[i]
+                        else:
+                            attr_val += " " + new_arg[i]
+
+                # enclose attribute value in quotes
+                attr_val = "\"" + attr_val.strip() + "\""
+
+                # concatenate arguments, where; new_arg[0] -> instance id \
+                # new_arg[1] -> attribute name ; attr_val -> value of attribute
+                new_arg = new_arg[0] + " " + new_arg[1] + " " + attr_val
+
+                val_dict["instc_id"] = new_arg
+
             # check if command entered is in dictionary of "legal" \
             # commands and call the method to handle it
             if val_dict["cmd_name"] in list(arg_param_dict):
@@ -341,8 +370,16 @@ class HBNBCommand(cmd.Cmd):
                     if val_dict["cmd_name"] == key:
                         # concatenate parameter to pass to method
                         # <class> + " " + <instance id>
+
+                        # strip quotes only if command is not <update> \
+                        # otherwise; leave quotes as they are for proper \
+                        # formatting of the attribute value field of <update>
+                        if key != "update":
+                            val_dict["instc_id"] = \
+                                val_dict["instc_id"].strip("\"\'")
+
                         param = val_dict["cls_name"] + \
-                            " " + val_dict["instc_id"].strip("\"\'")
+                            " " + val_dict["instc_id"]
 
                         val(param)
                         return

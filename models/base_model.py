@@ -75,8 +75,8 @@ class BaseModel():
             updated_at with the current datetime
         """
 
-        storage.save()
         self.updated_at = datetime.now().isoformat()
+        storage.save()
 
     def to_dict(self):
         """
