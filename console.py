@@ -45,6 +45,17 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
+    def emptyline(self):
+        """
+            override the emptyline class to do nothing \
+            when an empty line is returned
+
+            by default, this method returns the result of the \
+            last command entered
+        """
+
+        pass
+
     def do_create(self, arg):
         """
             Creates a new instance of BaseModel, saves it (to the JSON file) \
