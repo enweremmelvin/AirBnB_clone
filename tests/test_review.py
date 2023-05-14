@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """Defines unittests for models/review.py. """
 
 import os
@@ -13,56 +14,80 @@ class TestReview_instantiation(unittest.TestCase):
     """Unittests for testing the Review class."""
 
     def test_no_args(self):
+        """ placeholder docstring - to be properly docced """
+
         self.assertEqual(Review, type(Review()))
 
     def test_new_instance_stored_in_objects(self):
+        """ placeholder docstring - to be properly docced """
+
         self.assertIn(Review(), models.storage.all().values())
 
     def test_id_is_public_str(self):
+        """ placeholder docstring - to be properly docced """
+
         self.assertEqual(str, type(Review().id))
 
     def test_created_at_is_public_datetime(self):
+        """ placeholder docstring - to be properly docced """
+
         self.assertEqual(datetime, type(Review().created_at))
 
     def test_updated_at_is_public_datetime(self):
+        """ placeholder docstring - to be properly docced """
+
         self.assertEqual(datetime, type(Review().updated_at))
 
     def test_place_id_is_public_class_attribute(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         self.assertEqual(str, type(Review.place_id))
         self.assertIn("place_id", dir(review))
         self.assertNotIn("place_id", review.__dict__)
 
     def test_user_id_is_public_class_attribute(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         self.assertEqual(str, type(Review.user_id))
         self.assertIn("user_id", dir(review))
         self.assertNotIn("user_id", review.__dict__)
 
     def test_text_is_public_class_attribute(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         self.assertEqual(str, type(Review.text))
         self.assertIn("text", dir(review))
         self.assertNotIn("text", review.__dict__)
 
     def test_two_reviews_unique_ids(self):
+        """ placeholder docstring - to be properly docced """
+
         review1 = Review()
         review2 = Review()
         self.assertNotEqual(review1.id, review2.id)
 
     def test_two_reviews_different_created_at(self):
+        """ placeholder docstring - to be properly docced """
+
         review1 = Review()
         sleep(0.05)
         review2 = Review()
         self.assertLess(review1.created_at, review2.created_at)
 
     def test_two_reviews_different_updated_at(self):
+        """ placeholder docstring - to be properly docced """
+
         review1 = Review()
         sleep(0.05)
         review2 = Review()
         self.assertLess(review1.updated_at, review2.updated_at)
 
     def test_str_representation(self):
+        """ placeholder docstring - to be properly docced """
+
         date_time = datetime.today()
         date_time_repr = repr(date_time)
         review = Review()
@@ -75,10 +100,14 @@ class TestReview_instantiation(unittest.TestCase):
         self.assertIn("'updated_at': " + date_time_repr, reviewstr)
 
     def test_args_unused(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review(None)
         self.assertNotIn(None, review.__dict__.values())
 
     def test_instantiation_with_kwargs(self):
+        """ placeholder docstring - to be properly docced """
+
         date_time = datetime.today()
         dt_iso = date_time.isoformat()
         review = Review(id="345", created_at=dt_iso, updated_at=dt_iso)
@@ -88,12 +117,16 @@ class TestReview_instantiation(unittest.TestCase):
 
     @classmethod
     def setUp(self):
+        """ placeholder docstring - to be properly docced """
+
         try:
             os.rename("objects.json", "tmp")
         except IOError:
             pass
 
     def tearDown(self):
+        """ placeholder docstring - to be properly docced """
+
         try:
             os.remove("objects.json")
         except IOError:
@@ -104,6 +137,8 @@ class TestReview_instantiation(unittest.TestCase):
             pass
 
     def test_one_save(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         sleep(0.05)
         first_updated_at = review.updated_at
@@ -111,6 +146,8 @@ class TestReview_instantiation(unittest.TestCase):
         self.assertLess(first_updated_at, review.updated_at)
 
     def test_two_saves(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         sleep(0.05)
         first_updated_at = review.updated_at
@@ -122,11 +159,15 @@ class TestReview_instantiation(unittest.TestCase):
         self.assertLess(second_updated_at, review.updated_at)
 
     def test_save_with_arg(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         with self.assertRaises(TypeError):
             review.save(None)
 
     def test_save_updates_file(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         review.save()
         reviewid = "Review." + review.id
@@ -134,9 +175,13 @@ class TestReview_instantiation(unittest.TestCase):
             self.assertIn(reviewid, f.read())
 
     def test_to_dict_type(self):
+        """ placeholder docstring - to be properly docced """
+
         self.assertTrue(dict, type(Review().to_dict()))
 
     def test_to_dict_contains_correct_keys(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         self.assertIn("id", review.to_dict())
         self.assertIn("created_at", review.to_dict())
@@ -144,6 +189,8 @@ class TestReview_instantiation(unittest.TestCase):
         self.assertIn("__class__", review.to_dict())
 
     def test_to_dict_contains_added_attributes(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         review.middle_name = "ALX"
         review.my_number = 98
@@ -151,6 +198,8 @@ class TestReview_instantiation(unittest.TestCase):
         self.assertIn("my_number", review.to_dict())
 
     def test_to_dict_datetime_attributes_are_strs(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         review_dict = review.to_dict()
         self.assertEqual(str, type(review_dict["id"]))
@@ -158,6 +207,8 @@ class TestReview_instantiation(unittest.TestCase):
         self.assertEqual(str, type(review_dict["updated_at"]))
 
     def test_to_dict_output(self):
+        """ placeholder docstring - to be properly docced """
+
         date_time = datetime.today()
         review = Review()
         review.id = "123456"
@@ -171,10 +222,14 @@ class TestReview_instantiation(unittest.TestCase):
         self.assertDictEqual(review.to_dict(), tdict)
 
     def test_contrast_to_dict_dunder_dict(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         self.assertNotEqual(review.to_dict(), review.__dict__)
 
     def test_to_dict_with_arg(self):
+        """ placeholder docstring - to be properly docced """
+
         review = Review()
         with self.assertRaises(TypeError):
             review.to_dict(None)
