@@ -8,6 +8,7 @@
 
 import re
 import cmd
+import json
 from models import storage
 from models.user import User
 from models.city import City
@@ -27,7 +28,7 @@ class HBNBCommand(cmd.Cmd):
 
     # create dictionary of legal classes where; \
     # key -> class name && value -> memory representation of class
-    __class_dict = {"BaseModel": BaseModel, "User": User, "Place": Place,
+    __legal_class_dict = {"BaseModel": BaseModel, "User": User, "Place": Place,
                     "State": State, "City": City, "Amenity": Amenity,
                     "Review": Review}
 
@@ -56,6 +57,44 @@ class HBNBCommand(cmd.Cmd):
 
         pass
 
+    @staticmethod
+    def convert_to_type(value):
+        """
+            static method for converting values entered to their \
+            appropriate type -> used in do_update to change value \
+            to its appropriate type
+            EXPECTED TYPES: <int> <float> <str>
+        """
+
+        if '.' in value:
+            try:
+                value = float(value)
+                return value
+            except ValueError:
+                pass
+        else:
+            try:
+                value = int(value)
+                return value
+            except ValueError:
+                pass
+
+        return value
+
+    @staticmethod
+    def strip_quotes(string):
+        """
+            this method strips enclosing quotes on a string
+        """
+
+        for i in ["\"", "'"]:
+            if string[0] == i:
+                string = string[1:]
+            if string[-1] == i:
+                string = string[:-1]
+
+        return string
+
     def do_create(self, arg):
         """
             Creates a new instance of BaseModel, saves it (to the JSON file) \
@@ -75,7 +114,7 @@ class HBNBCommand(cmd.Cmd):
         if " " in arg:
             arg = arg.split()[0]
 
-        if arg not in list(self.__class_dict):
+        if arg not in list(self.__legal_class_dict):
             print("** class doesn't exist **")
             return
 
@@ -84,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
 
         # search for class to create an instance of
         # class -> value of key that matches arg
-        for key, value in self.__class_dict.items():
+        for key, value in self.__legal_class_dict.items():
             if arg == key:
                 class_name = value
                 break
@@ -120,7 +159,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = arg.split()
 
-            if args[0] not in list(self.__class_dict):
+            if args[0] not in list(self.__legal_class_dict):
                 print("** class doesn't exist **")
             elif len(args) == 1:
                 print("** instance id missing **")
@@ -157,7 +196,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = arg.split()
 
-            if args[0] not in list(self.__class_dict):
+            if args[0] not in list(self.__legal_class_dict):
                 print("** class doesn't exist **")
             elif len(args) == 1:
                 print("** instance id missing **")
@@ -194,7 +233,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = arg.split()
 
-            if args[0] not in list(self.__class_dict):
+            if args[0] not in list(self.__legal_class_dict):
                 print("** class doesn't exist **")
             else:
                 for key, value in obj_dict.items():
@@ -236,9 +275,34 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
         else:
+            # handle tuple argument passed to update
+            # a tuple is only passed to update when a dictionary is \
+            # used to update the class attributes; where: \
+            # key -> attribute name | value -> attribute value
+            if type(arg) is tuple:
+                cls_key = arg[0] + "." + arg[2].strip("\"")
+                cls_obj = obj_dict[cls_key]
+
+                if arg[0] not in list(self.__legal_class_dict):
+                    print("** class doesn't exist **")
+                elif (not arg[2]) or (len(arg[2]) == 0):
+                    print("** instance id missing **")
+                elif cls_key not in list(obj_dict):
+                    print("** no instance found **")
+                else:
+                    attr_dict = json.loads(arg[3])
+
+                    for key, val in attr_dict.items():
+                        # convert val to its appropriate type
+                        val = self.convert_to_type(val)
+                        cls_obj.__dict__[key] = val
+                        storage.save()
+
+                return
+
             args = arg.split()
 
-            if args[0] not in list(self.__class_dict):
+            if args[0] not in list(self.__legal_class_dict):
                 print("** class doesn't exist **")
             elif len(args) == 1:
                 print("** instance id missing **")
@@ -256,9 +320,8 @@ class HBNBCommand(cmd.Cmd):
                 value = args[3]
 
                 # concatenate words enclosed in double quotes
-                i = 3
-
                 try:
+                    i = 3
                     new_str = ""
 
                     while True:
@@ -281,28 +344,11 @@ class HBNBCommand(cmd.Cmd):
                     pass
 
                 # strip enclosing single or double quotes
-                for i in ["\"", "'"]:
-                    if attr[0] == i:
-                        attr = attr[1:]
-                    if attr[-1] == i:
-                        attr = attr[:-1]
+                attr = self.strip_quotes(attr)
+                value = self.strip_quotes(value)
 
-                    if value[0] == i:
-                        value = value[1:]
-                    if value[-1] == i:
-                        value = value[:-1]
-
-                # convert string to int or float (if it is convertible)
-                if '.' in value:
-                    try:
-                        value = float(value)
-                    except ValueError:
-                        pass
-                else:
-                    try:
-                        value = int(value)
-                    except ValueError:
-                        pass
+                # convert <value> value to its appropriate type
+                value = self.convert_to_type(value)
 
                 # set new attribute and save changes to JSON file
                 obj.__dict__[attr] = value
@@ -328,6 +374,24 @@ class HBNBCommand(cmd.Cmd):
 
         # split commands entered; split by whitespace " "
         args = arg.split()
+
+        # try and except block to handle when an argument is passed to update
+        # as a dictionary -> eg: User.update("<class id>", \
+        # "<key/val pair dict>")
+        try:
+            arg_group = re.search("(\w+)\.(\w+)\(\"?\'?(.*)\"?\'?,\s+(\{.*\})",
+                                  arg)
+
+            value = arg_group.group(4)
+            value = value.replace("'", "\"")
+            arg_group = arg_group.groups()
+
+            arg_tuple = (arg_group[0], arg_group[1], arg_group[2], value)
+            if arg_tuple[1] == "update":
+                self.do_update(arg_tuple)
+                return
+        except:
+            pass
 
         # below code in try statement handles commands that require arguments \
         # eg: User.show("<user id here>")
@@ -395,7 +459,7 @@ class HBNBCommand(cmd.Cmd):
 
                         val(param)
                         return
-        except (TypeError, IndexError, AttributeError):
+        except:
             pass
 
         # search for entered command in keys of dictionary

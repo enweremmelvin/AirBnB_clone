@@ -42,13 +42,16 @@ class FileStorage():
         """
 
         json_obj = {}
-        temp_dict = {}
-        obj_key_list = list(self.__objects)
 
         # create a list of the dictionary representation of all objects \
         # stored in the self.__objects private class field
-        for val in obj_key_list:
-            for sub_key, sub_val in self.__objects[val].to_dict().items():
+        for key, val in self.__objects.items():
+            temp_dict = {}
+
+            for sub_key, sub_val in val.to_dict().items():
+                # check if sub_key is one of the dated: \
+                # <created_at> | <updated_at> and convert to str if its \
+                # a datetime object
                 if (sub_key == "created_at") or (sub_key == "updated_at"):
                     if type(sub_val) is not str:
                         x = datetime.isoformat
@@ -58,7 +61,7 @@ class FileStorage():
                 else:
                     temp_dict[sub_key] = sub_val
 
-            json_obj[f"{val}"] = temp_dict
+            json_obj[key] = temp_dict
 
         # dump list of dictionary representation to json
         json_obj = json.dumps(json_obj)
