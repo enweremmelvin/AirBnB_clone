@@ -74,7 +74,6 @@ class TestAmenity(unittest.TestCase):
         self.assertEqual(am.created_at, date_time)
         self.assertEqual(am.updated_at, date_time)
 
-
     @classmethod
     def setUp(self):
         try:
