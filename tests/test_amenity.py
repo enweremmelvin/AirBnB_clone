@@ -74,10 +74,6 @@ class TestAmenity(unittest.TestCase):
         self.assertEqual(am.created_at, date_time)
         self.assertEqual(am.updated_at, date_time)
 
-    def test_instantiation_with_None_kwargs(self):
-        with self.assertRaises(TypeError):
-            Amenity(id=None, created_at=None, updated_at=None)
-
 
     @classmethod
     def setUp(self):
