@@ -63,7 +63,6 @@ class TestBaseModel(unittest.TestCase):
         self.assertIn("'created_at': " + date_time_repr, base_model_str)
         self.assertIn("'updated_at': " + date_time_repr, base_model_str)
 
-
     def test_id_is_str(self):
         """
             test type of id
@@ -134,7 +133,6 @@ class TestBaseModel(unittest.TestCase):
             'updated_at': date_time.isoformat()
         }
         self.assertDictEqual(base_model.to_dict(), check_dict)
-
 
     def test_to_dict_datetime_attributes(self):
         """
