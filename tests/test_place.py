@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Defines unittests for models/placeace.py. """
+"""Defines unittests for models/place.py. """
 
 import os
 import models
@@ -181,10 +181,6 @@ class TestPlace(unittest.TestCase):
         placeid = "Place." + place.id
         with open("objects.json", "r") as f:
             self.assertIn(placeid, f.read())
-
-
-class TestPlace_to_dict(unittest.TestCase):
-    """Unittests for testing to_dict method of the Place class."""
 
     def test_to_dict_type(self):
         self.assertTrue(dict, type(Place().to_dict()))
