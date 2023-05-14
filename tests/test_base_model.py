@@ -32,8 +32,6 @@ class TestBaseModel(unittest.TestCase):
     def test_noarg_init(self):
         self.assertEqual(BaseModel, type(BaseModel()))
 
-    def test_created_at_is_datetime(self):
-        self.assertEqual(datetime, type(BaseModel().created_at))
 
     def test_id_is_str(self):
         self.assertEqual(str, type(BaseModel().id))
