@@ -42,12 +42,26 @@ class FileStorage():
         """
 
         json_obj = {}
-        obj_key_list = list(self.__objects)
 
         # create a list of the dictionary representation of all objects \
         # stored in the self.__objects private class field
-        for val in obj_key_list:
-            json_obj[f"{val}"] = self.__objects[val].to_dict()
+        for key, val in self.__objects.items():
+            temp_dict = {}
+
+            for sub_key, sub_val in val.to_dict().items():
+                # check if sub_key is one of the dated: \
+                # <created_at> | <updated_at> and convert to str if its \
+                # a datetime object
+                if (sub_key == "created_at") or (sub_key == "updated_at"):
+                    if type(sub_val) is not str:
+                        x = datetime.isoformat
+                        temp_dict[sub_key] = sub_val.isoformat()
+                    else:
+                        temp_dict[sub_key] = sub_val
+                else:
+                    temp_dict[sub_key] = sub_val
+
+            json_obj[key] = temp_dict
 
         # dump list of dictionary representation to json
         json_obj = json.dumps(json_obj)
@@ -101,4 +115,17 @@ class FileStorage():
                         break
 
                 if class_name:
+                    # convert <created_at> and <updated_at> time values \
+                    # from str back to datetime objects - and add add the \
+                    # class instance initialized to the __objects dictionary
+
+                    for sub_key, sub_val in val.items():
+                        if (sub_key == "created_at") or \
+                           (sub_key == "updated_at"):
+                            # assign datetime.strptime to <x> to comply \
+                            # with PEP8 line restrictions
+                            x = datetime.strptime
+
+                            val[sub_key] = x(sub_val, "%Y-%m-%dT%H:%M:%S.%f")
+
                     self.__objects[key] = class_name(**val)

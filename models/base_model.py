@@ -40,6 +40,16 @@ class BaseModel():
                 if val == "__class__":
                     continue
 
+                # check if value of <created_at> and <updated_at> \
+                # dictionary keys hold string values and convert to datetime \
+                # objects if so; otherwise -> initialize value as is
+                if (val == "created_at") or (val == "updated_at"):
+                    if type(kwargs[val]) == str:
+                        # initialize x to datetime.strptime \
+                        # -> to comply witih PEP8 max line characters
+                        x = datetime.strptime
+                        kwargs[val] = x(kwargs[val], "%Y-%m-%dT%H:%M:%S.%f")
+
                 self.__dict__[val] = kwargs[val]
 
             return
@@ -47,8 +57,8 @@ class BaseModel():
         self.id = str(uuid.uuid4())
 
         # initialize created_at and updated_at public instance variables
-        self.created_at = datetime.now().isoformat()
-        self.updated_at = datetime.now().isoformat()
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
         # if its a new instance that is being initialized (not from kwargs) \
         # add a call to the method new(self) on storage
@@ -60,12 +70,6 @@ class BaseModel():
             [<class name>] (<self.id>) <self.__dict__>
         """
 
-        if (type(self.created_at) is str) and (type(self.updated_at) is str):
-            x = datetime.strptime
-
-            self.created_at = x(str(self.created_at), "%Y-%m-%dT%H:%M:%S.%f")
-            self.updated_at = x(str(self.updated_at), "%Y-%m-%dT%H:%M:%S.%f")
-
         value = f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
         return value
 
@@ -75,7 +79,7 @@ class BaseModel():
             updated_at with the current datetime
         """
 
-        self.updated_at = datetime.now().isoformat()
+        self.updated_at = datetime.now()
         storage.save()
 
     def to_dict(self):
@@ -84,16 +88,31 @@ class BaseModel():
             keys/values of __dict__ of the instance
         """
 
+        # temporary dict to hold dict_vals <seld.__dict__> values \
+        # this dictionary is created so <created_at> and \
+        # <updated_at> values get converted to str without being \
+        # changed to str in the class itself
+        temp_dict = {}
+
         dict_vals = self.__dict__
         dict_vals["__class__"] = self.__class__.__name__
 
-        # convert datetime (created_at and updated_at) public instance fields \
-        # to datetime iso format
-        to_iso = datetime.isoformat
+        # convert <created_at> and <updated_at> time values to str \
+        # and assign to temp_dict
+        for key, val in dict_vals.items():
+            if (key == "created_at") or (key == "updated_at"):
+                # check if <created_at> or <updated_at> is a string \
+                # if true -> add to dict \
+                # otherwise -> convert to isoformat() of datetime
+                # this condition is being implemented to correctly return a \
+                # dictionary of an instance whose values are the to_dict() \
+                # return value of another instance; here the datetime \
+                # attributes <created_at> and <updated_at> will be strings
+                if type(val) is not str:
+                    temp_dict[key] = val.isoformat()
+                else:
+                    temp_dict[key] = val
+            else:
+                temp_dict[key] = val
 
-        if type(dict_vals["created_at"]) is not str:
-            dict_vals["created_at"] = to_iso(dict_vals["created_at"])
-        if type(dict_vals["updated_at"]) is not str:
-            dict_vals["updated_at"] = to_iso(dict_vals["updated_at"])
-
-        return dict_vals
+        return temp_dict
