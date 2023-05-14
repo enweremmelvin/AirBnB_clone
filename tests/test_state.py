@@ -10,7 +10,7 @@ from models.state import State
 
 
 class TestState(unittest.TestCase):
-    """Unittests for testing the State class."""
+    """Unittests for testing the State classs."""
 
     def test_no_args(self):
         self.assertEqual(State, type(State()))
