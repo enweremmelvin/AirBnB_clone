@@ -155,4 +155,3 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn("City." + city.id, objs)
         self.assertIn("Amenity." + amenity.id, objs)
         self.assertIn("Review." + review.id, objs)
-
