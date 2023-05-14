@@ -68,7 +68,7 @@ class TestState(unittest.TestCase):
 
     def test_instantiation_with_kwargs(self):
         date_time = datetime.today()
-        dtiso = date_time.isoformat()
+        dt_iso = date_time.isoformat()
         st = State(id="345", created_at=dt_iso, updated_at=dt_iso)
         self.assertEqual(st.id, "345")
         self.assertEqual(st.created_at, date_time)
