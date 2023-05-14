@@ -129,11 +129,11 @@ class TestPlace(unittest.TestCase):
     def test_instantiation_with_kwargs(self):
         date_time = datetime.today()
         date_time_iso = date_time.isoformat()
-        place = Place(id="345", created_at=date_time_iso, updated_at=date_time_iso)
+        place = Place(id="345", created_at=date_time_iso,
+                      updated_at=date_time_iso)
         self.assertEqual(place.id, "345")
         self.assertEqual(place.created_at, date_time)
         self.assertEqual(place.updated_at, date_time)
-
 
     @classmethod
     def setUp(self):

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 """
     this module contains the HBNBCommand class -> \
@@ -29,8 +29,8 @@ class HBNBCommand(cmd.Cmd):
     # create dictionary of legal classes where; \
     # key -> class name && value -> memory representation of class
     __legal_class_dict = {"BaseModel": BaseModel, "User": User, "Place": Place,
-                    "State": State, "City": City, "Amenity": Amenity,
-                    "Review": Review}
+                          "State": State, "City": City, "Amenity": Amenity,
+                          "Review": Review}
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -379,18 +379,17 @@ class HBNBCommand(cmd.Cmd):
         # as a dictionary -> eg: User.update("<class id>", \
         # "<key/val pair dict>")
         try:
-            arg_group = re.search("(\w+)\.(\w+)\(\"?\'?(.*)\"?\'?,\s+(\{.*\})",
-                                  arg)
+            ptn = re.search(r"(\w+)\.(\w+)\(\"?\'?(.*)\"?\'?,\s+(\{.*\})", arg)
 
-            value = arg_group.group(4)
+            value = ptn.group(4)
             value = value.replace("'", "\"")
-            arg_group = arg_group.groups()
+            ptn = ptn.groups()
 
-            arg_tuple = (arg_group[0], arg_group[1], arg_group[2], value)
+            arg_tuple = (ptn[0], ptn[1], ptn[2], value)
             if arg_tuple[1] == "update":
                 self.do_update(arg_tuple)
                 return
-        except:
+        except Exception:
             pass
 
         # below code in try statement handles commands that require arguments \
@@ -459,7 +458,7 @@ class HBNBCommand(cmd.Cmd):
 
                         val(param)
                         return
-        except:
+        except Exception:
             pass
 
         # search for entered command in keys of dictionary

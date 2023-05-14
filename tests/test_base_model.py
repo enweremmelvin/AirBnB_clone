@@ -1,9 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 """
     This module contains a class to test \
     the base model class
 """
+
 import os
 import time
 import uuid
