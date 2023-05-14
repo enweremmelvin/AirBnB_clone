@@ -155,10 +155,6 @@ class HBNBCommand(cmd.Cmd):
                 obj_key = args[0] + "." + args[1]
 
                 if obj_key not in list(obj_dict):
-                    print(obj_key)
-                    print("==============================================================")
-                    print(obj_dict)
-                    print("==============================================================")
                     print("** no instance found **")
                 else:
                     # delete object and save changes to JSON file
