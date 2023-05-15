@@ -70,7 +70,17 @@ class BaseModel():
             [<class name>] (<self.id>) <self.__dict__>
         """
 
-        value = f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        # create temp dictionary and delete the __class__ key \
+        # value pair from the temp dict
+        temp_dict = {}
+
+        for key, value in self.__dict__.items():
+            if key == "__class__":
+                continue
+
+            temp_dict[key] = value
+
+        value = f"[{self.__class__.__name__}] ({self.id}) {temp_dict}"
         return value
 
     def save(self):
