@@ -11,7 +11,7 @@ from models import storage
 from datetime import datetime
 
 
-class BaseModel:
+class BaseModel():
     """
         This class defines all common \
         attributes/methods for other classes
