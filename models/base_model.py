@@ -35,9 +35,10 @@ class BaseModel():
 
         if kwargs:
             key_list = list(kwargs)
+            self.id = str(uuid.uuid4())
 
             for val in key_list:
-                if val == "__class__":
+                if val == ("__class__") or (val == "id"):
                     continue
 
                 # check if value of <created_at> and <updated_at> \
