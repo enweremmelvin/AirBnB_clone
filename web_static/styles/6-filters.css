@@ -1,0 +1,42 @@
+.container .filters .popover_container_locations,
+.container .filters .popover_container_amenities
+{
+    background: #FAFAFA;
+    width: 100%;
+    border: 1px solid  #DDDDDD;
+    border-radius: 4px;
+    margin: 0px 0px;
+    display: none;
+}
+
+/*
+   position locations and amenities divs just right under
+   their parent divs
+*/
+.container .filters .popover_container_locations
+{
+    top: 225%;
+}
+
+.container .filters .popover_container_amenities
+{
+    top: 170%;
+}
+
+/* display ul items on hover on respective parent divs */
+.locations:hover .popover_container_locations,
+.amenities:hover .popover_container_amenities
+{
+    display: block;
+}
+
+.container .filters .popover
+{
+    list-style-type: none;
+}
+
+.container .filters h2
+{
+    margin-left: 20px;
+    font-size: 16px;
+}

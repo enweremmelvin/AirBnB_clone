@@ -3,7 +3,7 @@
 {
     height: 100%;
     width: 25%;
-    margin: auto 20px;
+    margin: auto 0;
     position: relative;
 }
 
@@ -19,12 +19,12 @@
 
 .container .filters h3
 {
-    font-weight: 600px;
+    font-weight: 600;
 }
 
 .container .filters h4
 {
-    font-weight: 400px;
+    font-weight: 400;
     font-size: 14px;
 }
 
@@ -40,4 +40,5 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    margin: auto 20px;
 }
