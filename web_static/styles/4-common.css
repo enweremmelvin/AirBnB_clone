@@ -1,32 +1,6 @@
 .container
 {
     max-width: 1000px;
+    width: 1000px;
     margin: 30px auto 30px auto;
-}
-
-.container .filters
-{
-    background: white;
-    position: absolute;
-    height: 70px;
-    width: 100%;
-    border: 1px #DDDDDD;
-    border-radius: 4px;
-}
-
-.container .filters button
-{
-    font-size: 18px;
-    background: #FF5A5F;
-    color:  #FFFFFF;
-    height: 48px;
-    width: 20%;
-    border: none;
-    border-radius: 4px;
-    margin: auto 30px auto 0px;
-}
-
-.container .filters button:hover
-{
-    background: rgba(255, 90, 95, .9)
 }

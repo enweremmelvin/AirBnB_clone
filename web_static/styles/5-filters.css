@@ -1,0 +1,43 @@
+.container .filters .locations,
+.container .filters .amenities
+{
+    height: 100%;
+    width: 25%;
+    margin: auto 20px;
+    position: relative;
+}
+
+.container .filters .locations
+{
+    border-right: 1px solid #DDDDDD;
+}
+
+.container .filters .amenities
+{
+    margin: auto 0px;
+}
+
+.container .filters h3
+{
+    font-weight: 600px;
+}
+
+.container .filters h4
+{
+    font-weight: 400px;
+    font-size: 14px;
+}
+
+.container .filters h3,
+.container .filters h4
+{
+    margin: auto 0;
+}
+
+/* center div conaining headers in its parent div*/
+.container .filters div
+{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
